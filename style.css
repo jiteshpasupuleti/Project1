@@ -11,14 +11,11 @@ body {
 
 .search-container input {
     padding: 10px;
-    width: 250px;
-    font-size: 16px;
+    width: 240px;
 }
 
 .search-container button {
     padding: 10px 15px;
-    font-size: 16px;
-    cursor: pointer;
 }
 
 #map {
@@ -26,17 +23,33 @@ body {
     width: 100%;
 }
 
-#places {
+#lists {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
     padding: 15px;
 }
 
-#places ul {
+.list-box {
+    flex: 1;
+    min-width: 250px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.list-box ul {
     list-style: none;
     padding: 0;
 }
 
-#places li {
-    padding: 8px;
-    border-bottom: 1px solid #ccc;
+.list-box li {
+    padding: 6px;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+}
+
+.list-box li:hover {
+    background: #f2f2f2;
 }
 
