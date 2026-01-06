@@ -1,45 +1,42 @@
 body {
     margin: 0;
-    font-family: Arial;
+    font-family: Arial, sans-serif;
 }
 
-.search {
-    padding: 15px;
+.search-container {
     background: #222;
+    padding: 15px;
     text-align: center;
 }
 
-.search input {
-    padding: 8px;
-    width: 240px;
+.search-container input {
+    padding: 10px;
+    width: 250px;
+    font-size: 16px;
 }
 
-.search button {
-    padding: 8px 12px;
+.search-container button {
+    padding: 10px 15px;
+    font-size: 16px;
+    cursor: pointer;
 }
 
-iframe {
-    width: 100%;
+#map {
     height: 400px;
-    border: none;
+    width: 100%;
 }
 
-.lists {
-    display: flex;
-    gap: 20px;
+#places {
     padding: 15px;
 }
 
-.lists div {
-    flex: 1;
-}
-
-ul {
+#places ul {
     list-style: none;
     padding: 0;
 }
 
-li {
-    padding: 6px;
-    border-bottom: 1px solid #ddd;
+#places li {
+    padding: 8px;
+    border-bottom: 1px solid #ccc;
 }
+
