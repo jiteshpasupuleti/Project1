@@ -1,10 +1,21 @@
+let map;
+let markers = [];
+
+map = L.map('map').setView([20.5937, 78.9629], 5);
+
+// OpenStreetMap tiles
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap contributors'
+}).addTo(map);
+
+// Search location
 function searchLocation() {
     const location = document.getElementById("locationInput").value;
 
     fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${location}`)
         .then(res => res.json())
         .then(data => {
-            if (!data.length) {
+            if (data.length === 0) {
                 alert("Location not found");
                 return;
             }
@@ -12,21 +23,26 @@ function searchLocation() {
             const lat = data[0].lat;
             const lon = data[0].lon;
 
-            document.getElementById("map").src =
-                `https://www.openstreetmap.org/export/embed.html?bbox=${lon-0.05}%2C${lat-0.05}%2C${lon+0.05}%2C${lat+0.05}&layer=mapnik&marker=${lat}%2C${lon}`;
+            map.setView([lat, lon], 13);
+            clearMarkers();
 
-            loadPlaces(lat, lon);
+            L.marker([lat, lon]).addTo(map)
+                .bindPopup(location)
+                .openPopup();
+
+            fetchPlaces(lat, lon);
         });
 }
 
-function loadPlaces(lat, lon) {
-    document.getElementById("schools").innerHTML = "";
-    document.getElementById("places").innerHTML = "";
+// Fetch nearby places
+function fetchPlaces(lat, lon) {
+    document.getElementById("placesList").innerHTML = "";
 
     const query = `
     [out:json];
     (
       node(around:5000,${lat},${lon})["amenity"="school"];
+      node(around:5000,${lat},${lon})["amenity"="college"];
       node(around:5000,${lat},${lon})["tourism"="attraction"];
     );
     out body;
@@ -38,17 +54,24 @@ function loadPlaces(lat, lon) {
     })
     .then(res => res.json())
     .then(data => {
-        data.elements.forEach(p => {
-            const name = p.tags.name || "Unnamed";
+        data.elements.forEach(place => {
+            const name = place.tags.name || "Unnamed place";
 
             const li = document.createElement("li");
             li.textContent = name;
+            document.getElementById("placesList").appendChild(li);
 
-            if (p.tags.amenity === "school") {
-                document.getElementById("schools").appendChild(li);
-            } else {
-                document.getElementById("places").appendChild(li);
-            }
+            const marker = L.marker([place.lat, place.lon]).addTo(map)
+                .bindPopup(name);
+
+            markers.push(marker);
         });
     });
 }
+
+// Clear old markers
+function clearMarkers() {
+    markers.forEach(m => map.removeLayer(m));
+    markers = [];
+}
+
